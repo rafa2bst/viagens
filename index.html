@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle de Gastos — Viagem</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --ink:#10241f; --paper:#f4efe4; --card:#fffdf7;
+    --sun:#e07a3f; --sea:#1f7a6b; --sand:#d9c9a8;
+    --line:#e3d9c2; --muted:#6f6553; --danger:#b03a2e;
+    --shadow:0 2px 0 var(--line),0 12px 30px -18px rgba(16,36,31,.5);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Georgia',serif; color:var(--ink);
+    background:
+      radial-gradient(120% 80% at 100% 0%, #f7e7cf 0%, transparent 55%),
+      radial-gradient(120% 80% at 0% 100%, #d9ece4 0%, transparent 55%),
+      var(--paper);
+    min-height:100vh; padding:24px 16px 60px;
+  }
+  .wrap{max-width:760px;margin:0 auto}
+  header{text-align:center;margin-bottom:26px}
+  .kicker{font-family:system-ui,sans-serif;font-size:.7rem;letter-spacing:.32em;text-transform:uppercase;color:var(--sea);font-weight:700}
+  h1{font-size:2.3rem;letter-spacing:-.02em;margin:.15em 0 .1em;font-style:italic}
+  .sub{font-family:system-ui,sans-serif;font-size:.85rem;color:var(--muted)}
+
+  /* Painel saldo */
+  .balance{
+    background:linear-gradient(160deg,#16352d,#0c211c);
+    color:var(--paper); border-radius:20px; padding:26px 24px;
+    box-shadow:var(--shadow); position:relative; overflow:hidden; margin-bottom:22px;
+  }
+  .balance::after{content:"✈";position:absolute;right:-6px;top:-10px;font-size:7rem;opacity:.07;transform:rotate(18deg)}
+  .balance .lbl{font-family:system-ui,sans-serif;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;opacity:.7}
+  .balance .big{font-size:3rem;font-weight:700;letter-spacing:-.03em;margin:.05em 0 .2em}
+  .balance .big.neg{color:#ffb4a8}
+  .balance .row{display:flex;gap:24px;font-family:system-ui,sans-serif;font-size:.82rem;flex-wrap:wrap}
+  .balance .row span{opacity:.65}
+  .balance .row b{display:block;font-size:1.05rem;font-weight:700;margin-top:2px}
+  .bar{height:8px;border-radius:99px;background:rgba(255,255,255,.15);margin-top:18px;overflow:hidden}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--sea),var(--sun));transition:width .4s}
+
+  /* set verba */
+  .setbox{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+  .setbox input{flex:1;min-width:140px}
+
+  /* Forms */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
+  .card h2{font-size:1.15rem;font-style:italic;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  label{font-family:system-ui,sans-serif;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px}
+  input,select{
+    width:100%;font-family:system-ui,sans-serif;font-size:.95rem;padding:11px 13px;
+    border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);
+  }
+  input:focus,select:focus{outline:none;border-color:var(--sea);box-shadow:0 0 0 3px rgba(31,122,107,.12)}
+  .grid{display:grid;grid-template-columns:1.4fr 1fr;gap:12px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  @media(max-width:560px){.grid,.grid3{grid-template-columns:1fr}}
+  .field{margin-bottom:12px}
+  button{
+    font-family:system-ui,sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;
+    border:none;border-radius:10px;padding:12px 18px;transition:transform .08s,filter .15s;
+  }
+  button:active{transform:translateY(1px)}
+  .btn-primary{background:var(--sun);color:#fff;width:100%}
+  .btn-primary:hover{filter:brightness(1.05)}
+  .btn-ghost{background:transparent;color:var(--sea);border:1px solid var(--sea);padding:8px 12px}
+
+  /* Lista */
+  .list{list-style:none}
+  .item{display:flex;align-items:center;gap:12px;padding:13px 4px;border-bottom:1px solid var(--line)}
+  .item:last-child{border-bottom:none}
+  .tag{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:1.1rem;background:var(--sand);flex-shrink:0}
+  .item .info{flex:1;min-width:0}
+  .item .info b{font-family:system-ui,sans-serif;font-size:.93rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .item .info small{font-family:system-ui,sans-serif;font-size:.74rem;color:var(--muted)}
+  .item .val{font-family:system-ui,sans-serif;font-weight:700;font-size:1rem;color:var(--danger)}
+  .item .del{background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px 6px}
+  .item .del:hover{color:var(--danger)}
+  .empty{text-align:center;color:var(--muted);font-family:system-ui,sans-serif;font-size:.88rem;padding:24px 0}
+
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:99px;font-family:system-ui,sans-serif;
+    font-size:.85rem;opacity:0;transition:.25s;pointer-events:none;z-index:99}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .warn{font-family:system-ui,sans-serif;font-size:.78rem;color:var(--danger);background:#fdecea;border:1px solid #f5c6c0;border-radius:10px;padding:10px 12px;margin-bottom:16px;display:none}
+  .warn.show{display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">Diário de Bordo</div>
+    <h1>Gastos da Viagem</h1>
+    <div class="sub">Lance cada despesa e acompanhe seu saldo em tempo real</div>
+  </header>
+
+  <div class="warn" id="warn">⚠️ Configure suas credenciais do Supabase no topo do arquivo (SUPABASE_URL e SUPABASE_KEY). Sem isso, os dados não serão salvos.</div>
+
+  <!-- SALDO -->
+  <section class="balance">
+    <div class="lbl">Dinheiro Disponível</div>
+    <div class="big" id="saldo">R$ 0,00</div>
+    <div class="row">
+      <div><span>Verba inicial</span><b id="verba">R$ 0,00</b></div>
+      <div><span>Total gasto</span><b id="gasto">R$ 0,00</b></div>
+      <div><span>Lançamentos</span><b id="qtd">0</b></div>
+    </div>
+    <div class="bar"><i id="bar" style="width:0%"></i></div>
+    <div class="setbox">
+      <input type="number" id="verbaInput" placeholder="Definir verba inicial (R$)" step="0.01">
+      <button class="btn-ghost" onclick="setVerba()">Salvar verba</button>
+    </div>
+  </section>
+
+  <!-- LANÇAMENTO -->
+  <section class="card">
+    <h2>＋ Novo lançamento</h2>
+    <div class="field">
+      <label>Descrição</label>
+      <input type="text" id="desc" placeholder="Ex: Almoço no centro, Uber, hotel...">
+    </div>
+    <div class="grid">
+      <div class="field">
+        <label>Categoria</label>
+        <select id="cat">
+          <option value="🍽️ Alimentação">🍽️ Alimentação</option>
+          <option value="🏨 Hospedagem">🏨 Hospedagem</option>
+          <option value="🚗 Transporte">🚗 Transporte</option>
+          <option value="🎟️ Passeios">🎟️ Passeios</option>
+          <option value="🛍️ Compras">🛍️ Compras</option>
+          <option value="💊 Saúde">💊 Saúde</option>
+          <option value="📦 Outros">📦 Outros</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Valor (R$)</label>
+        <input type="number" id="valor" placeholder="0,00" step="0.01">
+      </div>
+    </div>
+    <div class="field">
+      <label>Data</label>
+      <input type="date" id="data">
+    </div>
+    <button class="btn-primary" onclick="addDespesa()">Lançar despesa</button>
+  </section>
+
+  <!-- LISTA -->
+  <section class="card">
+    <h2>📋 Despesas lançadas</h2>
+    <ul class="list" id="lista"><li class="empty">Carregando…</li></ul>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   1) COLE AQUI SUAS CREDENCIAIS DO SUPABASE
+   ============================================================ */
+const SUPABASE_URL = "https://pjuzawxjrywfupbrukqm.supabase.co";
+const SUPABASE_KEY = "sb_publishable_fO_L4xD3N99Ybm4PiL58Ug_yYtJupfp";
+/* ============================================================ */
+
+const BRL = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v||0);
+const $ = id => document.getElementById(id);
+let sb = null, despesas = [], verba = 0;
+
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+
+// data padrão = hoje
+$('data').value = new Date().toISOString().slice(0,10);
+
+function initSupabase(){
+  if(SUPABASE_URL.includes('SEU-PROJETO') || SUPABASE_KEY.includes('SUA-ANON')){
+    $('warn').classList.add('show');
+    return false;
+  }
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  return true;
+}
+
+async function carregar(){
+  if(!sb){ render(); return; }
+  // verba
+  const {data:cfg} = await sb.from('viagem_config').select('*').eq('id',1).maybeSingle();
+  verba = cfg ? Number(cfg.verba) : 0;
+  // despesas
+  const {data,error} = await sb.from('viagem_despesas').select('*').order('data',{ascending:false}).order('id',{ascending:false});
+  if(error){ toast('Erro ao carregar: '+error.message); return; }
+  despesas = data || [];
+  render();
+}
+
+async function setVerba(){
+  const v = parseFloat($('verbaInput').value);
+  if(isNaN(v)||v<0){ toast('Informe um valor válido'); return; }
+  verba = v; $('verbaInput').value='';
+  if(sb){
+    const {error} = await sb.from('viagem_config').upsert({id:1, verba:v});
+    if(error){ toast('Erro: '+error.message); return; }
+  }
+  render(); toast('Verba atualizada ✅');
+}
+
+async function addDespesa(){
+  const desc=$('desc').value.trim();
+  const cat=$('cat').value;
+  const valor=parseFloat($('valor').value);
+  const data=$('data').value;
+  if(!desc){ toast('Informe a descrição'); return; }
+  if(isNaN(valor)||valor<=0){ toast('Informe um valor válido'); return; }
+  const reg={descricao:desc, categoria:cat, valor:valor, data:data};
+  if(sb){
+    const {data:ins,error}=await sb.from('viagem_despesas').insert(reg).select().single();
+    if(error){ toast('Erro: '+error.message); return; }
+    despesas.unshift(ins);
+  } else {
+    despesas.unshift({...reg, id:Date.now()});
+  }
+  $('desc').value=''; $('valor').value='';
+  render(); toast('Despesa lançada ✅');
+}
+
+async function delDespesa(id){
+  if(sb){
+    const {error}=await sb.from('viagem_despesas').delete().eq('id',id);
+    if(error){ toast('Erro: '+error.message); return; }
+  }
+  despesas = despesas.filter(d=>d.id!==id);
+  render(); toast('Removido');
+}
+
+function render(){
+  const totalGasto = despesas.reduce((s,d)=>s+Number(d.valor),0);
+  const saldo = verba - totalGasto;
+  $('verba').textContent = BRL(verba);
+  $('gasto').textContent = BRL(totalGasto);
+  $('qtd').textContent = despesas.length;
+  const sEl=$('saldo'); sEl.textContent=BRL(saldo);
+  sEl.classList.toggle('neg', saldo<0);
+  const pct = verba>0 ? Math.min(100,(totalGasto/verba)*100) : 0;
+  $('bar').style.width = pct+'%';
+
+  const ul=$('lista');
+  if(!despesas.length){ ul.innerHTML='<li class="empty">Nenhuma despesa lançada ainda.</li>'; return; }
+  ul.innerHTML = despesas.map(d=>{
+    const icon=(d.categoria||'📦').split(' ')[0];
+    const dt=d.data?new Date(d.data+'T00:00').toLocaleDateString('pt-BR'):'';
+    return `<li class="item">
+      <div class="tag">${icon}</div>
+      <div class="info"><b>${escapeHtml(d.descricao)}</b><small>${escapeHtml(d.categoria||'')} · ${dt}</small></div>
+      <div class="val">- ${BRL(d.valor)}</div>
+      <button class="del" onclick="delDespesa(${d.id})" title="Remover">✕</button>
+    </li>`;
+  }).join('');
+}
+
+function escapeHtml(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+initSupabase();
+carregar();
+</script>
+</body>
+</html>
