@@ -126,6 +126,21 @@
   .rot-progress-head span:last-child{color:var(--sea)}
   .rot-progress-bar{height:10px;border-radius:99px;background:var(--sand);overflow:hidden}
   .rot-progress-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--sea),var(--gold));transition:width .4s}
+  .day-chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 14px;margin-bottom:6px;-webkit-overflow-scrolling:touch}
+  .day-chips::-webkit-scrollbar{height:5px}
+  .day-chips::-webkit-scrollbar-thumb{background:var(--sand);border-radius:99px}
+  .day-chip{flex:0 0 auto;background:var(--card);border:1.5px solid var(--line);border-radius:14px;
+    padding:9px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:58px;transition:.15s;font-family:system-ui,sans-serif}
+  .day-chip:hover{border-color:var(--sea)}
+  .day-chip .cnum{font-size:1.35rem;font-weight:700;line-height:1;color:var(--ink)}
+  .day-chip .cwk{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .day-chip .cdot{font-size:.6rem;color:var(--muted);background:var(--sand);padding:1px 6px;border-radius:99px;margin-top:3px;font-weight:700}
+  .day-chip.on{background:var(--sea);border-color:var(--sea)}
+  .day-chip.on .cnum,.day-chip.on .cwk{color:#fff}
+  .day-chip.on .cdot{background:rgba(255,255,255,.25);color:#fff}
+  .day-chip.full{border-color:var(--gold)}
+  .day-chip.full .cdot{background:var(--gold);color:#fff}
+  .day-chip.full.on{background:var(--gold);border-color:var(--gold)}
   .day-group{margin-bottom:18px}
   .day-head{display:flex;align-items:baseline;gap:10px;padding:0 4px 8px;border-bottom:2px solid var(--ink);margin-bottom:10px}
   .day-head .dnum{font-size:1.6rem;font-weight:700;font-family:system-ui,sans-serif;line-height:1}
@@ -372,7 +387,7 @@ const LOGIN_PASS = "123456";
 
 const BRL = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v||0);
 const $ = id => document.getElementById(id);
-let sb=null, despesas=[], verba=0, caixa=0, pagamento='dinheiro', roteiro=[];
+let sb=null, despesas=[], verba=0, caixa=0, pagamento='dinheiro', roteiro=[], diaRoteiroSel=null;
 
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
 
@@ -558,6 +573,8 @@ function fmtDiaCabecalho(dateStr){
   const d=new Date(dateStr+'T00:00');
   return {num:d.getDate(), wk:DIAS_SEM[d.getDay()], mes:MESES[d.getMonth()]};
 }
+function selecionarDia(dt){ diaRoteiroSel = (diaRoteiroSel===dt) ? null : dt; renderRoteiro(); }
+
 function renderRoteiro(){
   const box=$('roteiroLista');
   const total=roteiro.length, feitos=roteiro.filter(r=>r.feito).length;
@@ -570,31 +587,50 @@ function renderRoteiro(){
     $('rotProgressBar').style.width=pct+'%';
   } else { wrap.style.display='none'; }
 
-  if(!total){ box.innerHTML='<div class="empty">Nenhuma atividade no roteiro ainda. Adicione acima 👆</div>'; return; }
+  if(!total){ box.innerHTML='<div class="empty">Nenhuma atividade no roteiro ainda. Adicione acima 👆</div>'; diaRoteiroSel=null; return; }
 
   // agrupa por data
   const grupos={};
   roteiro.forEach(r=>{ (grupos[r.data]=grupos[r.data]||[]).push(r); });
   const datas=Object.keys(grupos).sort();
 
-  box.innerHTML=datas.map(dt=>{
+  // se nada selecionado ou dia selecionado sumiu, seleciona o primeiro
+  if(!diaRoteiroSel || !grupos[diaRoteiroSel]) diaRoteiroSel = datas[0];
+
+  // chips dos dias
+  const chips = datas.map(dt=>{
     const c=fmtDiaCabecalho(dt);
-    const itens=grupos[dt].slice().sort((a,b)=>(a.ordem-b.ordem)||(a.id-b.id));
+    const itens=grupos[dt];
     const f=itens.filter(i=>i.feito).length;
-    const linhas=itens.map(r=>{
-      const per=r.periodo?`<span class="rper">${PER_LBL[r.periodo]||r.periodo}</span>`:'';
-      return `<div class="rot-item ${r.feito?'done':''}">
-        <div class="rot-check ${r.feito?'on':''}" onclick="toggleRoteiro(${r.id})">${r.feito?'✓':''}</div>
-        <div class="rtxt" onclick="toggleRoteiro(${r.id})">${esc(r.atividade)}</div>
-        ${per}
-        <button class="rdel" onclick="delRoteiro(${r.id})" title="Remover">✕</button>
-      </div>`;
-    }).join('');
-    return `<div class="day-group">
+    const completo = f===itens.length;
+    const on = dt===diaRoteiroSel;
+    return `<button class="day-chip ${on?'on':''} ${completo?'full':''}" onclick="selecionarDia('${dt}')">
+      <span class="cnum">${c.num}</span>
+      <span class="cwk">${c.wk.slice(0,3)}</span>
+      <span class="cdot">${f}/${itens.length}</span>
+    </button>`;
+  }).join('');
+
+  // atividades do dia selecionado
+  const c=fmtDiaCabecalho(diaRoteiroSel);
+  const itens=grupos[diaRoteiroSel].slice().sort((a,b)=>(a.ordem-b.ordem)||(a.id-b.id));
+  const f=itens.filter(i=>i.feito).length;
+  const linhas=itens.map(r=>{
+    const per=r.periodo?`<span class="rper">${PER_LBL[r.periodo]||r.periodo}</span>`:'';
+    return `<div class="rot-item ${r.feito?'done':''}">
+      <div class="rot-check ${r.feito?'on':''}" onclick="toggleRoteiro(${r.id})">${r.feito?'✓':''}</div>
+      <div class="rtxt" onclick="toggleRoteiro(${r.id})">${esc(r.atividade)}</div>
+      ${per}
+      <button class="rdel" onclick="delRoteiro(${r.id})" title="Remover">✕</button>
+    </div>`;
+  }).join('');
+
+  box.innerHTML = `
+    <div class="day-chips">${chips}</div>
+    <div class="day-group">
       <div class="day-head"><span class="dnum">${c.num}</span><span class="dwk">${c.wk} · ${c.mes}</span><span class="dcount">${f}/${itens.length}</span></div>
       ${linhas}
     </div>`;
-  }).join('');
 }
 
 
