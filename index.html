@@ -88,15 +88,53 @@
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .warn{font-family:system-ui,sans-serif;font-size:.78rem;color:var(--danger);background:#fdecea;border:1px solid #f5c6c0;border-radius:10px;padding:10px 12px;margin-bottom:16px;display:none}
   .warn.show{display:block}
+
+  /* Login */
+  #login{position:fixed;inset:0;display:grid;place-items:center;padding:20px;z-index:50;
+    background:radial-gradient(120% 80% at 100% 0%, #f7e7cf 0%, transparent 55%),
+      radial-gradient(120% 80% at 0% 100%, #d9ece4 0%, transparent 55%), var(--paper)}
+  .loginbox{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:32px 28px;
+    box-shadow:var(--shadow);width:100%;max-width:360px;text-align:center}
+  .loginbox .plane{font-size:2.4rem}
+  .loginbox h2{font-style:italic;font-size:1.5rem;margin:.2em 0 .1em}
+  .loginbox p{font-family:system-ui,sans-serif;font-size:.82rem;color:var(--muted);margin-bottom:20px}
+  .loginbox .field{text-align:left;margin-bottom:14px}
+  .loginerr{font-family:system-ui,sans-serif;font-size:.8rem;color:var(--danger);min-height:18px;margin-bottom:8px}
+  .hidden{display:none!important}
+  .logout{position:absolute;top:0;right:0;font-family:system-ui,sans-serif;font-size:.74rem;
+    background:none;border:1px solid var(--line);color:var(--muted);padding:6px 12px;border-radius:99px;cursor:pointer}
+  header{position:relative}
 </style>
 </head>
 <body>
-<div class="wrap">
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="loginbox">
+    <div class="plane">✈</div>
+    <h2>Gastos da Viagem</h2>
+    <p>Entre para acessar seu controle</p>
+    <div class="field">
+      <label>Usuário</label>
+      <input type="text" id="loginUser" placeholder="Seu usuário" autocomplete="username">
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <input type="password" id="loginPass" placeholder="Sua senha" autocomplete="current-password" onkeydown="if(event.key==='Enter')fazerLogin()">
+    </div>
+    <div class="loginerr" id="loginErr"></div>
+    <button class="btn-primary" onclick="fazerLogin()">Entrar</button>
+  </div>
+</div>
+
+<div class="wrap hidden" id="app">
   <header>
+    <button class="logout" onclick="sair()">Sair</button>
     <div class="kicker">Diário de Bordo</div>
     <h1>Gastos da Viagem</h1>
     <div class="sub">Lance cada despesa e acompanhe seu saldo em tempo real</div>
   </header>
+
 
   <div class="warn" id="warn">⚠️ Configure suas credenciais do Supabase no topo do arquivo (SUPABASE_URL e SUPABASE_KEY). Sem isso, os dados não serão salvos.</div>
 
@@ -164,6 +202,36 @@
 const SUPABASE_URL = "https://pjuzawxjrywfupbrukqm.supabase.co";
 const SUPABASE_KEY = "sb_publishable_fO_L4xD3N99Ybm4PiL58Ug_yYtJupfp";
 /* ============================================================ */
+
+/* ----- Login simples (ver aviso de segurança) ----- */
+const LOGIN_USER = "Rafael Andrade";
+const LOGIN_PASS = "123456";
+
+function fazerLogin(){
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  if(u === LOGIN_USER && p === LOGIN_PASS){
+    try{ sessionStorage.setItem('viagem_auth','1'); }catch(e){}
+    mostrarApp();
+  } else {
+    document.getElementById('loginErr').textContent = 'Usuário ou senha incorretos.';
+  }
+}
+function sair(){
+  try{ sessionStorage.removeItem('viagem_auth'); }catch(e){}
+  location.reload();
+}
+function mostrarApp(){
+  document.getElementById('login').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  initSupabase();
+  carregar();
+}
+function checarSessao(){
+  let ok=false;
+  try{ ok = sessionStorage.getItem('viagem_auth')==='1'; }catch(e){}
+  if(ok) mostrarApp();
+}
 
 const BRL = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v||0);
 const $ = id => document.getElementById(id);
@@ -261,8 +329,7 @@ function render(){
 
 function escapeHtml(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
-initSupabase();
-carregar();
+checarSessao();
 </script>
 </body>
 </html>
