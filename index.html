@@ -421,9 +421,11 @@ async function carregar(){
   const {data,error}=await sb.from('viagem_despesas').select('*').order('data',{ascending:false}).order('id',{ascending:false});
   if(error){ toast('Erro ao carregar: '+error.message); return; }
   despesas=data||[];
-  const {data:rot}=await sb.from('viagem_roteiro').select('*').order('data',{ascending:true}).order('ordem',{ascending:true}).order('id',{ascending:true});
+  const {data:rot,error:errRot}=await sb.from('viagem_roteiro').select('*').order('data',{ascending:true}).order('ordem',{ascending:true}).order('id',{ascending:true});
+  if(errRot){ toast('Erro no roteiro: '+errRot.message); }
   roteiro=rot||[];
   render();
+  renderRoteiro();
 }
 async function setConfig(){
   const v=parseFloat($('verbaInput').value)||0, c=parseFloat($('caixaInput').value)||0;
