@@ -120,6 +120,28 @@
   .rep-row .rbar i{display:block;height:100%;background:linear-gradient(90deg,var(--sea),var(--sun));border-radius:6px}
   .rep-row .rv{font-family:system-ui,sans-serif;font-size:.8rem;font-weight:700;width:84px;text-align:right;flex-shrink:0}
 
+  /* roteiro */
+  .rot-progress{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);margin-bottom:18px}
+  .rot-progress-head{display:flex;justify-content:space-between;font-family:system-ui,sans-serif;font-size:.82rem;font-weight:700;margin-bottom:8px}
+  .rot-progress-head span:last-child{color:var(--sea)}
+  .rot-progress-bar{height:10px;border-radius:99px;background:var(--sand);overflow:hidden}
+  .rot-progress-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--sea),var(--gold));transition:width .4s}
+  .day-group{margin-bottom:18px}
+  .day-head{display:flex;align-items:baseline;gap:10px;padding:0 4px 8px;border-bottom:2px solid var(--ink);margin-bottom:10px}
+  .day-head .dnum{font-size:1.6rem;font-weight:700;font-family:system-ui,sans-serif;line-height:1}
+  .day-head .dwk{font-style:italic;font-size:1.05rem;flex:1}
+  .day-head .dcount{font-family:system-ui,sans-serif;font-size:.72rem;color:var(--muted);background:var(--sand);padding:3px 9px;border-radius:99px;font-weight:700}
+  .rot-item{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;transition:.15s;box-shadow:0 1px 0 var(--line)}
+  .rot-item:hover{border-color:var(--sea)}
+  .rot-item.done{background:#eef5f1;border-color:#cfe6da}
+  .rot-check{width:26px;height:26px;border-radius:8px;border:2px solid var(--sea);flex-shrink:0;cursor:pointer;display:grid;place-items:center;background:#fff;transition:.15s;font-size:.95rem;color:#fff}
+  .rot-check.on{background:var(--sea)}
+  .rot-item .rtxt{flex:1;font-family:system-ui,sans-serif;font-size:.95rem;cursor:pointer}
+  .rot-item.done .rtxt{text-decoration:line-through;color:var(--muted)}
+  .rot-item .rper{font-size:.68rem;padding:2px 8px;border-radius:99px;background:var(--sand);font-family:system-ui,sans-serif;font-weight:700;color:var(--muted);white-space:nowrap}
+  .rot-item .rdel{background:none;border:none;color:var(--muted);font-size:1rem;cursor:pointer;padding:2px 4px}
+  .rot-item .rdel:hover{color:var(--danger)}
+
   .hidden{display:none!important}
 
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:99px;font-family:system-ui,sans-serif;font-size:.85rem;opacity:0;transition:.25s;pointer-events:none;z-index:99}
@@ -179,6 +201,7 @@
     <nav>
       <button class="navitem active" data-aba="lancar" onclick="irPara('lancar')">✏️ Lançar</button>
       <button class="navitem" data-aba="despesas" onclick="irPara('despesas')">📋 Despesas</button>
+      <button class="navitem" data-aba="roteiro" onclick="irPara('roteiro')">🗺️ Roteiro</button>
       <button class="navitem" data-aba="relatorios" onclick="irPara('relatorios')">📊 Relatórios</button>
       <button class="navitem" data-aba="config" onclick="irPara('config')">⚙️ Verba & Caixa</button>
     </nav>
@@ -254,6 +277,34 @@
       </div>
     </section>
 
+    <!-- ABA: ROTEIRO -->
+    <section class="aba hidden" id="aba-roteiro">
+      <div class="card rot-add">
+        <h2>🗺️ Adicionar ao roteiro</h2>
+        <div class="grid">
+          <div class="field"><label>Data</label>
+            <input type="date" id="rotData"></div>
+          <div class="field"><label>Período (opcional)</label>
+            <select id="rotPeriodo">
+              <option value="">—</option>
+              <option value="manha">🌅 Manhã</option>
+              <option value="tarde">☀️ Tarde</option>
+              <option value="noite">🌙 Noite</option>
+            </select></div>
+        </div>
+        <div class="field"><label>Atividade</label>
+          <input type="text" id="rotAtiv" placeholder="Ex: Lago Negro, Snowland 12hrs, Jantar St Gallen..." onkeydown="if(event.key==='Enter')addRoteiro()"></div>
+        <button class="btn-primary" onclick="addRoteiro()">Adicionar</button>
+      </div>
+
+      <div class="rot-progress" id="rotProgressWrap" style="display:none">
+        <div class="rot-progress-head"><span id="rotProgressTxt">0 de 0 feitos</span><span id="rotProgressPct">0%</span></div>
+        <div class="rot-progress-bar"><i id="rotProgressBar" style="width:0%"></i></div>
+      </div>
+
+      <div id="roteiroLista"><div class="empty">Carregando…</div></div>
+    </section>
+
     <!-- ABA: RELATÓRIOS -->
     <section class="aba hidden" id="aba-relatorios">
       <div class="stat-grid">
@@ -321,11 +372,12 @@ const LOGIN_PASS = "123456";
 
 const BRL = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v||0);
 const $ = id => document.getElementById(id);
-let sb=null, despesas=[], verba=0, caixa=0, pagamento='dinheiro';
+let sb=null, despesas=[], verba=0, caixa=0, pagamento='dinheiro', roteiro=[];
 
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
 
 $('data').value = new Date().toISOString().slice(0,10);
+$('rotData').value = new Date().toISOString().slice(0,10);
 
 /* ---- login ---- */
 function fazerLogin(){
@@ -349,6 +401,7 @@ function irPara(aba){
   document.querySelectorAll('.navitem').forEach(b=>b.classList.toggle('active', b.dataset.aba===aba));
   $('tituloAba').textContent=titulos[aba];
   if(aba==='relatorios') renderRelatorios();
+  if(aba==='roteiro') renderRoteiro();
   if(aba==='config'){ $('verbaInput').value=verba||''; $('caixaInput').value=caixa||''; }
   fecharMenu();
 }
@@ -367,7 +420,10 @@ async function carregar(){
   verba=cfg?Number(cfg.verba):0; caixa=cfg?Number(cfg.caixa||0):0;
   const {data,error}=await sb.from('viagem_despesas').select('*').order('data',{ascending:false}).order('id',{ascending:false});
   if(error){ toast('Erro ao carregar: '+error.message); return; }
-  despesas=data||[]; render();
+  despesas=data||[];
+  const {data:rot}=await sb.from('viagem_roteiro').select('*').order('data',{ascending:true}).order('ordem',{ascending:true}).order('id',{ascending:true});
+  roteiro=rot||[];
+  render();
 }
 async function setConfig(){
   const v=parseFloat($('verbaInput').value)||0, c=parseFloat($('caixaInput').value)||0;
@@ -395,7 +451,7 @@ async function delDespesa(id){
 function pedirZerar(){
   fecharMenu();
   $('modalTitle').textContent='Zerar tudo?';
-  $('modalText').textContent='Isso apaga todas as despesas e zera a verba e o caixa. Não dá pra desfazer.';
+  $('modalText').textContent='Isso apaga todas as despesas, o roteiro e zera a verba e o caixa. Não dá pra desfazer.';
   $('modalOk').onclick=zerarTudo;
   $('modal').classList.remove('hidden');
 }
@@ -404,9 +460,10 @@ async function zerarTudo(){
   if(sb){
     const {error:e1}=await sb.from('viagem_despesas').delete().neq('id',-1);
     const {error:e2}=await sb.from('viagem_config').upsert({id:1,verba:0,caixa:0});
+    await sb.from('viagem_roteiro').delete().neq('id',-1);
     if(e1||e2){ toast('Erro ao zerar'); return; }
   }
-  despesas=[]; verba=0; caixa=0;
+  despesas=[]; verba=0; caixa=0; roteiro=[];
   fecharModal(); render(); irPara('lancar'); toast('Tudo zerado 🧹');
 }
 
@@ -469,7 +526,76 @@ function renderRelatorios(){
   $('repPag').innerHTML=barras(agrupar('pagamento'),k=>k==='cartao'?'💳 Cartão':'💵 Dinheiro');
 }
 
-function esc(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+/* ---- roteiro ---- */
+const DIAS_SEM=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const MESES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const PER_LBL={manha:'🌅 Manhã',tarde:'☀️ Tarde',noite:'🌙 Noite'};
+
+async function addRoteiro(){
+  const data=$('rotData').value, ativ=$('rotAtiv').value.trim(), per=$('rotPeriodo').value;
+  if(!data){toast('Escolha a data');return;}
+  if(!ativ){toast('Escreva a atividade');return;}
+  const ordem=roteiro.filter(r=>r.data===data).length;
+  const reg={data:data,atividade:ativ,periodo:per||null,feito:false,ordem:ordem};
+  if(sb){ const {data:ins,error}=await sb.from('viagem_roteiro').insert(reg).select().single(); if(error){toast('Erro: '+error.message);return;} roteiro.push(ins); }
+  else { roteiro.push({...reg,id:Date.now()}); }
+  $('rotAtiv').value='';
+  renderRoteiro(); toast('Adicionado ao roteiro ✅');
+}
+async function toggleRoteiro(id){
+  const r=roteiro.find(x=>x.id===id); if(!r) return;
+  r.feito=!r.feito;
+  if(sb){ const {error}=await sb.from('viagem_roteiro').update({feito:r.feito}).eq('id',id); if(error){toast('Erro: '+error.message);r.feito=!r.feito;return;} }
+  renderRoteiro();
+}
+async function delRoteiro(id){
+  if(sb){ const {error}=await sb.from('viagem_roteiro').delete().eq('id',id); if(error){toast('Erro: '+error.message);return;} }
+  roteiro=roteiro.filter(r=>r.id!==id); renderRoteiro(); toast('Removido');
+}
+function fmtDiaCabecalho(dateStr){
+  const d=new Date(dateStr+'T00:00');
+  return {num:d.getDate(), wk:DIAS_SEM[d.getDay()], mes:MESES[d.getMonth()]};
+}
+function renderRoteiro(){
+  const box=$('roteiroLista');
+  const total=roteiro.length, feitos=roteiro.filter(r=>r.feito).length;
+  const wrap=$('rotProgressWrap');
+  if(total>0){
+    wrap.style.display='block';
+    const pct=Math.round(feitos/total*100);
+    $('rotProgressTxt').textContent=`${feitos} de ${total} feitos`;
+    $('rotProgressPct').textContent=pct+'%';
+    $('rotProgressBar').style.width=pct+'%';
+  } else { wrap.style.display='none'; }
+
+  if(!total){ box.innerHTML='<div class="empty">Nenhuma atividade no roteiro ainda. Adicione acima 👆</div>'; return; }
+
+  // agrupa por data
+  const grupos={};
+  roteiro.forEach(r=>{ (grupos[r.data]=grupos[r.data]||[]).push(r); });
+  const datas=Object.keys(grupos).sort();
+
+  box.innerHTML=datas.map(dt=>{
+    const c=fmtDiaCabecalho(dt);
+    const itens=grupos[dt].slice().sort((a,b)=>(a.ordem-b.ordem)||(a.id-b.id));
+    const f=itens.filter(i=>i.feito).length;
+    const linhas=itens.map(r=>{
+      const per=r.periodo?`<span class="rper">${PER_LBL[r.periodo]||r.periodo}</span>`:'';
+      return `<div class="rot-item ${r.feito?'done':''}">
+        <div class="rot-check ${r.feito?'on':''}" onclick="toggleRoteiro(${r.id})">${r.feito?'✓':''}</div>
+        <div class="rtxt" onclick="toggleRoteiro(${r.id})">${esc(r.atividade)}</div>
+        ${per}
+        <button class="rdel" onclick="delRoteiro(${r.id})" title="Remover">✕</button>
+      </div>`;
+    }).join('');
+    return `<div class="day-group">
+      <div class="day-head"><span class="dnum">${c.num}</span><span class="dwk">${c.wk} · ${c.mes}</span><span class="dcount">${f}/${itens.length}</span></div>
+      ${linhas}
+    </div>`;
+  }).join('');
+}
+
+
 
 checarSessao();
 </script>
