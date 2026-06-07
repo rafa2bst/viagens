@@ -431,14 +431,23 @@ function initSupabase(){
 }
 async function carregar(){
   if(!sb){ render(); return; }
-  const {data:cfg}=await sb.from('viagem_config').select('*').eq('id',1).maybeSingle();
-  verba=cfg?Number(cfg.verba):0; caixa=cfg?Number(cfg.caixa||0):0;
-  const {data,error}=await sb.from('viagem_despesas').select('*').order('data',{ascending:false}).order('id',{ascending:false});
-  if(error){ toast('Erro ao carregar: '+error.message); return; }
-  despesas=data||[];
-  const {data:rot,error:errRot}=await sb.from('viagem_roteiro').select('*').order('data',{ascending:true}).order('ordem',{ascending:true}).order('id',{ascending:true});
-  if(errRot){ toast('Erro no roteiro: '+errRot.message); }
-  roteiro=rot||[];
+  try{
+    const {data:cfg}=await sb.from('viagem_config').select('*').eq('id',1).maybeSingle();
+    verba=cfg?Number(cfg.verba):0; caixa=cfg?Number(cfg.caixa||0):0;
+  }catch(e){ /* config opcional */ }
+
+  try{
+    const {data,error}=await sb.from('viagem_despesas').select('*').order('data',{ascending:false}).order('id',{ascending:false});
+    if(error) throw error;
+    despesas=data||[];
+  }catch(e){ toast('Despesas: '+(e.message||e)); despesas=[]; }
+
+  try{
+    const {data:rot,error:errRot}=await sb.from('viagem_roteiro').select('*').order('data',{ascending:true}).order('id',{ascending:true});
+    if(errRot) throw errRot;
+    roteiro=rot||[];
+  }catch(e){ toast('Roteiro: '+(e.message||e)); roteiro=[]; }
+
   render();
   renderRoteiro();
 }
@@ -576,7 +585,9 @@ function fmtDiaCabecalho(dateStr){
 function selecionarDia(dt){ diaRoteiroSel = (diaRoteiroSel===dt) ? null : dt; renderRoteiro(); }
 
 function renderRoteiro(){
+ try{
   const box=$('roteiroLista');
+  if(!box) return;
   const total=roteiro.length, feitos=roteiro.filter(r=>r.feito).length;
   const wrap=$('rotProgressWrap');
   if(total>0){
@@ -589,9 +600,9 @@ function renderRoteiro(){
 
   if(!total){ box.innerHTML='<div class="empty">Nenhuma atividade no roteiro ainda. Adicione acima 👆</div>'; diaRoteiroSel=null; return; }
 
-  // agrupa por data
+  // agrupa por data (normaliza para YYYY-MM-DD)
   const grupos={};
-  roteiro.forEach(r=>{ (grupos[r.data]=grupos[r.data]||[]).push(r); });
+  roteiro.forEach(r=>{ const k=String(r.data).slice(0,10); (grupos[k]=grupos[k]||[]).push(r); });
   const datas=Object.keys(grupos).sort();
 
   // se nada selecionado ou dia selecionado sumiu, seleciona o primeiro
@@ -613,7 +624,7 @@ function renderRoteiro(){
 
   // atividades do dia selecionado
   const c=fmtDiaCabecalho(diaRoteiroSel);
-  const itens=grupos[diaRoteiroSel].slice().sort((a,b)=>(a.ordem-b.ordem)||(a.id-b.id));
+  const itens=grupos[diaRoteiroSel].slice().sort((a,b)=>((a.ordem||0)-(b.ordem||0))||(a.id-b.id));
   const f=itens.filter(i=>i.feito).length;
   const linhas=itens.map(r=>{
     const per=r.periodo?`<span class="rper">${PER_LBL[r.periodo]||r.periodo}</span>`:'';
@@ -631,6 +642,10 @@ function renderRoteiro(){
       <div class="day-head"><span class="dnum">${c.num}</span><span class="dwk">${c.wk} · ${c.mes}</span><span class="dcount">${f}/${itens.length}</span></div>
       ${linhas}
     </div>`;
+ }catch(err){
+   const box=$('roteiroLista');
+   if(box) box.innerHTML='<div class="empty">Erro ao montar o roteiro: '+esc(String(err&&err.message||err))+'</div>';
+ }
 }
 
 
