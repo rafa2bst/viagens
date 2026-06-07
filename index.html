@@ -13,55 +13,42 @@
     --shadow:0 2px 0 var(--line),0 12px 30px -18px rgba(16,36,31,.5);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{
-    font-family:'Georgia',serif; color:var(--ink);
-    background:
-      radial-gradient(120% 80% at 100% 0%, #f7e7cf 0%, transparent 55%),
-      radial-gradient(120% 80% at 0% 100%, #d9ece4 0%, transparent 55%),
-      var(--paper);
-    min-height:100vh;
-  }
+  body{font-family:'Georgia',serif;color:var(--ink);
+    background:radial-gradient(120% 80% at 100% 0%, #f7e7cf 0%, transparent 55%),
+      radial-gradient(120% 80% at 0% 100%, #d9ece4 0%, transparent 55%),var(--paper);min-height:100vh}
   .wrap{max-width:760px;margin:0 auto;padding:18px 16px 80px}
 
-  /* Topbar com hamburguer */
   .topbar{display:flex;align-items:center;gap:14px;max-width:760px;margin:0 auto;padding:14px 16px;position:sticky;top:0;
     background:rgba(244,239,228,.9);backdrop-filter:blur(8px);z-index:30;border-bottom:1px solid var(--line)}
   .burger{background:none;border:none;cursor:pointer;width:38px;height:38px;display:grid;place-items:center;border-radius:10px}
   .burger:hover{background:var(--sand)}
-  .burger span,.burger span::before,.burger span::after{
-    content:"";display:block;width:20px;height:2px;background:var(--ink);position:relative;transition:.25s}
+  .burger span,.burger span::before,.burger span::after{content:"";display:block;width:20px;height:2px;background:var(--ink);position:relative;transition:.25s}
   .burger span::before{position:absolute;top:-6px}
   .burger span::after{position:absolute;top:6px}
   .topbar .ttl{font-style:italic;font-size:1.15rem;flex:1}
   .topbar .ttl small{font-family:system-ui,sans-serif;font-style:normal;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--sea);display:block;font-weight:700}
 
-  /* Drawer */
   .overlay{position:fixed;inset:0;background:rgba(16,36,31,.45);opacity:0;pointer-events:none;transition:.25s;z-index:40}
   .overlay.show{opacity:1;pointer-events:auto}
-  .drawer{position:fixed;top:0;left:0;height:100%;width:260px;background:var(--card);z-index:41;
-    transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:8px 0 40px -20px rgba(0,0,0,.4);
-    display:flex;flex-direction:column;padding:22px 16px}
+  .drawer{position:fixed;top:0;left:0;height:100%;width:260px;background:var(--card);z-index:41;transform:translateX(-100%);
+    transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:8px 0 40px -20px rgba(0,0,0,.4);display:flex;flex-direction:column;padding:22px 16px}
   .drawer.show{transform:translateX(0)}
   .drawer .head{font-style:italic;font-size:1.3rem;margin-bottom:4px}
   .drawer .head small{font-family:system-ui,sans-serif;font-style:normal;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--sea);display:block;font-weight:700}
   .drawer nav{margin-top:22px;display:flex;flex-direction:column;gap:4px}
-  .navitem{font-family:system-ui,sans-serif;font-size:.95rem;font-weight:600;text-align:left;background:none;border:none;
-    padding:13px 14px;border-radius:10px;cursor:pointer;color:var(--ink);display:flex;align-items:center;gap:12px;transition:.15s}
+  .navitem{font-family:system-ui,sans-serif;font-size:.95rem;font-weight:600;text-align:left;background:none;border:none;padding:13px 14px;border-radius:10px;cursor:pointer;color:var(--ink);display:flex;align-items:center;gap:12px;transition:.15s}
   .navitem:hover{background:var(--sand)}
   .navitem.active{background:var(--sea);color:#fff}
   .drawer .spacer{flex:1}
-  .drawer .danger-btn{font-family:system-ui,sans-serif;font-size:.85rem;font-weight:700;background:#fdecea;color:var(--danger);
-    border:1px solid #f5c6c0;padding:12px;border-radius:10px;cursor:pointer;width:100%}
-  .drawer .logout-btn{font-family:system-ui,sans-serif;font-size:.8rem;background:none;border:1px solid var(--line);
-    color:var(--muted);padding:10px;border-radius:10px;cursor:pointer;width:100%;margin-top:8px}
+  .drawer .danger-btn{font-family:system-ui,sans-serif;font-size:.85rem;font-weight:700;background:#fdecea;color:var(--danger);border:1px solid #f5c6c0;padding:12px;border-radius:10px;cursor:pointer;width:100%}
+  .drawer .logout-btn{font-family:system-ui,sans-serif;font-size:.8rem;background:none;border:1px solid var(--line);color:var(--muted);padding:10px;border-radius:10px;cursor:pointer;width:100%;margin-top:8px}
 
   .warn{font-family:system-ui,sans-serif;font-size:.78rem;color:var(--danger);background:#fdecea;border:1px solid #f5c6c0;border-radius:10px;padding:10px 12px;margin-bottom:16px;display:none}
   .warn.show{display:block}
 
-  /* Painéis de saldo */
   .panels{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
   @media(max-width:560px){.panels{grid-template-columns:1fr}}
-  .panel{border-radius:18px;padding:20px 20px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .panel{border-radius:18px;padding:20px;box-shadow:var(--shadow);position:relative;overflow:hidden}
   .panel.total{background:linear-gradient(160deg,#16352d,#0c211c);color:var(--paper)}
   .panel.caixa{background:linear-gradient(160deg,#e07a3f,#c25a28);color:#fff}
   .panel .lbl{font-family:system-ui,sans-serif;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;opacity:.8}
@@ -72,7 +59,6 @@
   .panel .bar i{display:block;height:100%;background:rgba(255,255,255,.85);transition:width .4s}
   .panel .ico{position:absolute;right:-4px;top:-8px;font-size:5.5rem;opacity:.08}
 
-  /* Cards / forms */
   .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
   .card h2{font-size:1.15rem;font-style:italic;margin-bottom:14px;display:flex;align-items:center;gap:8px}
   label{font-family:system-ui,sans-serif;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px}
@@ -85,14 +71,11 @@
   button:active{transform:translateY(1px)}
   .btn-primary{background:var(--sun);color:#fff;width:100%}
   .btn-primary:hover{filter:brightness(1.05)}
-  .btn-ghost{background:transparent;color:var(--sea);border:1px solid var(--sea);padding:10px 12px}
 
-  /* toggle pagamento */
   .pay{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .pay button{border:1px solid var(--line);background:#fff;color:var(--muted);font-weight:600;display:flex;align-items:center;justify-content:center;gap:7px}
   .pay button.on{border-color:var(--sea);background:var(--sea);color:#fff}
 
-  /* lista */
   .list{list-style:none}
   .item{display:flex;align-items:center;gap:12px;padding:13px 4px;border-bottom:1px solid var(--line)}
   .item:last-child{border-bottom:none}
@@ -108,7 +91,6 @@
   .item .del:hover{color:var(--danger)}
   .empty{text-align:center;color:var(--muted);font-family:system-ui,sans-serif;font-size:.88rem;padding:24px 0}
 
-  /* relatórios */
   .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
   .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
   .stat .k{font-family:system-ui,sans-serif;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
@@ -120,52 +102,48 @@
   .rep-row .rbar i{display:block;height:100%;background:linear-gradient(90deg,var(--sea),var(--sun));border-radius:6px}
   .rep-row .rv{font-family:system-ui,sans-serif;font-size:.8rem;font-weight:700;width:84px;text-align:right;flex-shrink:0}
 
-  /* roteiro */
-  .rot-progress{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);margin-bottom:18px}
-  .rot-progress-head{display:flex;justify-content:space-between;font-family:system-ui,sans-serif;font-size:.82rem;font-weight:700;margin-bottom:8px}
-  .rot-progress-head span:last-child{color:var(--sea)}
-  .rot-progress-bar{height:10px;border-radius:99px;background:var(--sand);overflow:hidden}
-  .rot-progress-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--sea),var(--gold));transition:width .4s}
-  .day-chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 14px;margin-bottom:6px;-webkit-overflow-scrolling:touch}
-  .day-chips::-webkit-scrollbar{height:5px}
-  .day-chips::-webkit-scrollbar-thumb{background:var(--sand);border-radius:99px}
-  .day-chip{flex:0 0 auto;background:var(--card);border:1.5px solid var(--line);border-radius:14px;
-    padding:9px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:58px;transition:.15s;font-family:system-ui,sans-serif}
-  .day-chip:hover{border-color:var(--sea)}
-  .day-chip .cnum{font-size:1.35rem;font-weight:700;line-height:1;color:var(--ink)}
-  .day-chip .cwk{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
-  .day-chip .cdot{font-size:.6rem;color:var(--muted);background:var(--sand);padding:1px 6px;border-radius:99px;margin-top:3px;font-weight:700}
-  .day-chip.on{background:var(--sea);border-color:var(--sea)}
-  .day-chip.on .cnum,.day-chip.on .cwk{color:#fff}
-  .day-chip.on .cdot{background:rgba(255,255,255,.25);color:#fff}
-  .day-chip.full{border-color:var(--gold)}
-  .day-chip.full .cdot{background:var(--gold);color:#fff}
-  .day-chip.full.on{background:var(--gold);border-color:var(--gold)}
-  .day-group{margin-bottom:18px}
-  .day-head{display:flex;align-items:baseline;gap:10px;padding:0 4px 8px;border-bottom:2px solid var(--ink);margin-bottom:10px}
-  .day-head .dnum{font-size:1.6rem;font-weight:700;font-family:system-ui,sans-serif;line-height:1}
-  .day-head .dwk{font-style:italic;font-size:1.05rem;flex:1}
-  .day-head .dcount{font-family:system-ui,sans-serif;font-size:.72rem;color:var(--muted);background:var(--sand);padding:3px 9px;border-radius:99px;font-weight:700}
-  .rot-item{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;transition:.15s;box-shadow:0 1px 0 var(--line)}
-  .rot-item:hover{border-color:var(--sea)}
-  .rot-item.done{background:#eef5f1;border-color:#cfe6da}
-  .rot-check{width:26px;height:26px;border-radius:8px;border:2px solid var(--sea);flex-shrink:0;cursor:pointer;display:grid;place-items:center;background:#fff;transition:.15s;font-size:.95rem;color:#fff}
-  .rot-check.on{background:var(--sea)}
-  .rot-item .rtxt{flex:1;font-family:system-ui,sans-serif;font-size:.95rem;cursor:pointer}
-  .rot-item.done .rtxt{text-decoration:line-through;color:var(--muted)}
-  .rot-item .rper{font-size:.68rem;padding:2px 8px;border-radius:99px;background:var(--sand);font-family:system-ui,sans-serif;font-weight:700;color:var(--muted);white-space:nowrap}
-  .rot-item .rdel{background:none;border:none;color:var(--muted);font-size:1rem;cursor:pointer;padding:2px 4px}
-  .rot-item .rdel:hover{color:var(--danger)}
+  /* ROTEIRO v2 — abas de dias */
+  .rot-prog{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);margin-bottom:16px}
+  .rot-prog .ph{display:flex;justify-content:space-between;font-family:system-ui,sans-serif;font-size:.82rem;font-weight:700;margin-bottom:8px}
+  .rot-prog .ph span:last-child{color:var(--sea)}
+  .rot-prog .pb{height:10px;border-radius:99px;background:var(--sand);overflow:hidden}
+  .rot-prog .pb i{display:block;height:100%;background:linear-gradient(90deg,var(--sea),var(--gold));transition:width .4s}
+  .tabs{display:flex;gap:7px;overflow-x:auto;padding:2px 2px 12px}
+  .tabs::-webkit-scrollbar{height:5px}
+  .tabs::-webkit-scrollbar-thumb{background:var(--sand);border-radius:99px}
+  .tab{flex:0 0 auto;background:var(--card);border:1.5px solid var(--line);border-radius:13px;padding:8px 13px;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:1px;min-width:62px;font-family:system-ui,sans-serif;transition:.15s}
+  .tab:hover{border-color:var(--sea)}
+  .tab .tn{font-size:1.25rem;font-weight:700;line-height:1}
+  .tab .tw{font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .tab .tc{font-size:.58rem;background:var(--sand);color:var(--muted);padding:1px 6px;border-radius:99px;margin-top:3px;font-weight:700}
+  .tab.on{background:var(--sea);border-color:var(--sea)}
+  .tab.on .tn,.tab.on .tw{color:#fff}
+  .tab.on .tc{background:rgba(255,255,255,.25);color:#fff}
+  .tab.full{border-color:var(--gold)}
+  .tab.full .tc{background:var(--gold);color:#fff}
+  .tab.full.on{background:var(--gold);border-color:var(--gold)}
+  .dhead{display:flex;align-items:baseline;gap:10px;padding:0 4px 10px;border-bottom:2px solid var(--ink);margin:4px 0 12px}
+  .dhead .dn{font-size:1.7rem;font-weight:700;font-family:system-ui,sans-serif;line-height:1}
+  .dhead .dw{font-style:italic;font-size:1.1rem;flex:1}
+  .dhead .dc{font-family:system-ui,sans-serif;font-size:.72rem;color:var(--muted);background:var(--sand);padding:3px 9px;border-radius:99px;font-weight:700}
+  .ritem{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;transition:.15s}
+  .ritem:hover{border-color:var(--sea)}
+  .ritem.done{background:#eef5f1;border-color:#cfe6da}
+  .rchk{width:26px;height:26px;border-radius:8px;border:2px solid var(--sea);flex-shrink:0;cursor:pointer;display:grid;place-items:center;background:#fff;font-size:.95rem;color:#fff;transition:.15s}
+  .rchk.on{background:var(--sea)}
+  .ritem .rt{flex:1;font-family:system-ui,sans-serif;font-size:.95rem;cursor:pointer}
+  .ritem.done .rt{text-decoration:line-through;color:var(--muted)}
+  .ritem .rp{font-size:.66rem;padding:2px 8px;border-radius:99px;background:var(--sand);font-family:system-ui,sans-serif;font-weight:700;color:var(--muted);white-space:nowrap}
+  .ritem .rx{background:none;border:none;color:var(--muted);font-size:1rem;cursor:pointer;padding:2px 4px}
+  .ritem .rx:hover{color:var(--danger)}
 
   .hidden{display:none!important}
-
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:99px;font-family:system-ui,sans-serif;font-size:.85rem;opacity:0;transition:.25s;pointer-events:none;z-index:99}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-  /* login */
   #login{position:fixed;inset:0;display:grid;place-items:center;padding:20px;z-index:50;
-    background:radial-gradient(120% 80% at 100% 0%, #f7e7cf 0%, transparent 55%),
-      radial-gradient(120% 80% at 0% 100%, #d9ece4 0%, transparent 55%), var(--paper)}
+    background:radial-gradient(120% 80% at 100% 0%, #f7e7cf 0%, transparent 55%),radial-gradient(120% 80% at 0% 100%, #d9ece4 0%, transparent 55%),var(--paper)}
   .loginbox{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:32px 28px;box-shadow:var(--shadow);width:100%;max-width:360px;text-align:center}
   .loginbox .plane{font-size:2.4rem}
   .loginbox h2{font-style:italic;font-size:1.5rem;margin:.2em 0 .1em}
@@ -173,7 +151,6 @@
   .loginbox .field{text-align:left;margin-bottom:14px}
   .loginerr{font-family:system-ui,sans-serif;font-size:.8rem;color:var(--danger);min-height:18px;margin-bottom:8px}
 
-  /* modal confirm */
   #modal{position:fixed;inset:0;background:rgba(16,36,31,.5);display:grid;place-items:center;padding:20px;z-index:60}
   .modalbox{background:var(--card);border-radius:16px;padding:26px 24px;max-width:360px;width:100%;text-align:center;box-shadow:var(--shadow)}
   .modalbox h3{font-style:italic;font-size:1.3rem;margin-bottom:8px}
@@ -185,31 +162,24 @@
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="login">
   <div class="loginbox">
     <div class="plane">✈</div>
     <h2>Gastos da Viagem</h2>
     <p>Entre para acessar seu controle</p>
-    <div class="field"><label>Usuário</label>
-      <input type="text" id="loginUser" placeholder="Seu usuário" autocomplete="username"></div>
-    <div class="field"><label>Senha</label>
-      <input type="password" id="loginPass" placeholder="Sua senha" autocomplete="current-password" onkeydown="if(event.key==='Enter')fazerLogin()"></div>
+    <div class="field"><label>Usuário</label><input type="text" id="loginUser" placeholder="Seu usuário" autocomplete="username"></div>
+    <div class="field"><label>Senha</label><input type="password" id="loginPass" placeholder="Sua senha" autocomplete="current-password" onkeydown="if(event.key==='Enter')fazerLogin()"></div>
     <div class="loginerr" id="loginErr"></div>
     <button class="btn-primary" onclick="fazerLogin()">Entrar</button>
   </div>
 </div>
 
-<!-- APP -->
 <div id="app" class="hidden">
-
-  <!-- Topbar -->
   <div class="topbar">
     <button class="burger" onclick="abrirMenu()" aria-label="Menu"><span></span></button>
     <div class="ttl"><small>Diário de Bordo</small><span id="tituloAba">Lançar</span></div>
   </div>
 
-  <!-- Drawer -->
   <div class="overlay" id="overlay" onclick="fecharMenu()"></div>
   <aside class="drawer" id="drawer">
     <div class="head"><small>Diário de Bordo</small>Gastos da Viagem</div>
@@ -226,429 +196,268 @@
   </aside>
 
   <div class="wrap">
-    <div class="warn" id="warn">⚠️ Configure as credenciais do Supabase no arquivo. Sem isso, os dados não são salvos.</div>
+    <div class="warn" id="warn">⚠️ Configure as credenciais do Supabase no arquivo.</div>
 
-    <!-- Painéis -->
     <div class="panels">
-      <div class="panel total">
-        <div class="ico">✈</div>
-        <div class="lbl">Disponível (total)</div>
-        <div class="big" id="saldoTotal">R$ 0,00</div>
-        <div class="meta" id="metaTotal">Verba — · Gasto —</div>
-        <div class="bar"><i id="barTotal" style="width:0%"></i></div>
-      </div>
-      <div class="panel caixa">
-        <div class="ico">💵</div>
-        <div class="lbl">Dinheiro em caixa (espécie)</div>
-        <div class="big" id="saldoCaixa">R$ 0,00</div>
-        <div class="meta" id="metaCaixa">Levado — · Em dinheiro —</div>
-        <div class="bar"><i id="barCaixa" style="width:0%"></i></div>
-      </div>
+      <div class="panel total"><div class="ico">✈</div><div class="lbl">Disponível (total)</div><div class="big" id="saldoTotal">R$ 0,00</div><div class="meta" id="metaTotal">Verba — · Gasto —</div><div class="bar"><i id="barTotal" style="width:0%"></i></div></div>
+      <div class="panel caixa"><div class="ico">💵</div><div class="lbl">Dinheiro em caixa (espécie)</div><div class="big" id="saldoCaixa">R$ 0,00</div><div class="meta" id="metaCaixa">Levado — · Em dinheiro —</div><div class="bar"><i id="barCaixa" style="width:0%"></i></div></div>
     </div>
 
-    <!-- ABA: LANÇAR -->
+    <!-- LANÇAR -->
     <section class="aba" id="aba-lancar">
       <div class="card">
         <h2>＋ Novo lançamento</h2>
-        <div class="field"><label>Descrição</label>
-          <input type="text" id="desc" placeholder="Ex: Passagem aérea, diária do hotel, almoço..."></div>
+        <div class="field"><label>Descrição</label><input type="text" id="desc" placeholder="Ex: Passagem aérea, diária do hotel, almoço..."></div>
         <div class="grid">
           <div class="field"><label>Categoria</label>
-            <select id="cat">
-              <option>✈️ Passagens</option>
-              <option>🏨 Hospedagem</option>
-              <option>🍽️ Alimentação</option>
-              <option>🚗 Transporte</option>
-              <option>🎟️ Passeios</option>
-              <option>🛍️ Compras</option>
-              <option>💊 Saúde</option>
-              <option>📦 Outros</option>
-            </select></div>
-          <div class="field"><label>Local</label>
-            <input type="text" id="local" placeholder="Ex: Salvador, Hotel X, Aeroporto..."></div>
+            <select id="cat"><option>✈️ Passagens</option><option>🏨 Hospedagem</option><option>🍽️ Alimentação</option><option>🚗 Transporte</option><option>🎟️ Passeios</option><option>🛍️ Compras</option><option>💊 Saúde</option><option>📦 Outros</option></select></div>
+          <div class="field"><label>Local</label><input type="text" id="local" placeholder="Ex: Gramado, Hotel X..."></div>
         </div>
         <div class="grid">
-          <div class="field"><label>Valor (R$)</label>
-            <input type="number" id="valor" placeholder="0,00" step="0.01"></div>
-          <div class="field"><label>Data</label>
-            <input type="date" id="data"></div>
+          <div class="field"><label>Valor (R$)</label><input type="number" id="valor" placeholder="0,00" step="0.01"></div>
+          <div class="field"><label>Data</label><input type="date" id="data"></div>
         </div>
-        <div class="field">
-          <label>Forma de pagamento</label>
-          <div class="pay">
-            <button type="button" id="payDin" class="on" onclick="setPay('dinheiro')">💵 Dinheiro</button>
-            <button type="button" id="payCar" onclick="setPay('cartao')">💳 Cartão</button>
-          </div>
-        </div>
+        <div class="field"><label>Forma de pagamento</label>
+          <div class="pay"><button type="button" id="payDin" class="on" onclick="setPay('dinheiro')">💵 Dinheiro</button><button type="button" id="payCar" onclick="setPay('cartao')">💳 Cartão</button></div></div>
         <button class="btn-primary" onclick="addDespesa()">Lançar despesa</button>
       </div>
     </section>
 
-    <!-- ABA: DESPESAS -->
+    <!-- DESPESAS -->
     <section class="aba hidden" id="aba-despesas">
-      <div class="card">
-        <h2>📋 Despesas lançadas</h2>
-        <ul class="list" id="lista"><li class="empty">Carregando…</li></ul>
-      </div>
+      <div class="card"><h2>📋 Despesas lançadas</h2><ul class="list" id="lista"><li class="empty">Carregando…</li></ul></div>
     </section>
 
-    <!-- ABA: ROTEIRO -->
+    <!-- ROTEIRO -->
     <section class="aba hidden" id="aba-roteiro">
-      <div class="card rot-add">
+      <div class="card">
         <h2>🗺️ Adicionar ao roteiro</h2>
         <div class="grid">
-          <div class="field"><label>Data</label>
-            <input type="date" id="rotData"></div>
+          <div class="field"><label>Data</label><input type="date" id="rotData"></div>
           <div class="field"><label>Período (opcional)</label>
-            <select id="rotPeriodo">
-              <option value="">—</option>
-              <option value="manha">🌅 Manhã</option>
-              <option value="tarde">☀️ Tarde</option>
-              <option value="noite">🌙 Noite</option>
-            </select></div>
+            <select id="rotPeriodo"><option value="">—</option><option value="manha">🌅 Manhã</option><option value="tarde">☀️ Tarde</option><option value="noite">🌙 Noite</option></select></div>
         </div>
-        <div class="field"><label>Atividade</label>
-          <input type="text" id="rotAtiv" placeholder="Ex: Lago Negro, Snowland 12hrs, Jantar St Gallen..." onkeydown="if(event.key==='Enter')addRoteiro()"></div>
+        <div class="field"><label>Atividade</label><input type="text" id="rotAtiv" placeholder="Ex: Lago Negro, Snowland..." onkeydown="if(event.key==='Enter')addRoteiro()"></div>
         <button class="btn-primary" onclick="addRoteiro()">Adicionar</button>
       </div>
 
-      <div class="rot-progress" id="rotProgressWrap" style="display:none">
-        <div class="rot-progress-head"><span id="rotProgressTxt">0 de 0 feitos</span><span id="rotProgressPct">0%</span></div>
-        <div class="rot-progress-bar"><i id="rotProgressBar" style="width:0%"></i></div>
+      <div class="rot-prog" id="rotProg" style="display:none">
+        <div class="ph"><span id="progTxt">0 de 0 feitos</span><span id="progPct">0%</span></div>
+        <div class="pb"><i id="progBar" style="width:0%"></i></div>
       </div>
 
-      <div id="roteiroLista"><div class="empty">Carregando…</div></div>
+      <div class="tabs" id="rotTabs"></div>
+      <div id="rotConteudo"><div class="empty">Carregando…</div></div>
     </section>
 
-    <!-- ABA: RELATÓRIOS -->
+    <!-- RELATÓRIOS -->
     <section class="aba hidden" id="aba-relatorios">
       <div class="stat-grid">
         <div class="stat"><div class="k">Total gasto</div><div class="v" id="rTotal">R$ 0,00</div><div class="s" id="rQtd">0 lançamentos</div></div>
         <div class="stat"><div class="k">Gasto médio / lançamento</div><div class="v" id="rMedia">R$ 0,00</div><div class="s" id="rMediaDia">—</div></div>
       </div>
-      <div class="card">
-        <h2>📅 Dia que mais gastou</h2>
-        <div id="repDia"><div class="empty">Sem dados ainda.</div></div>
-      </div>
-      <div class="card">
-        <h2>📍 Onde gastou mais (local)</h2>
-        <div id="repLocal"><div class="empty">Sem dados ainda.</div></div>
-      </div>
-      <div class="card">
-        <h2>🏷️ Por categoria</h2>
-        <div id="repCat"><div class="empty">Sem dados ainda.</div></div>
-      </div>
-      <div class="card">
-        <h2>💳 Dinheiro x Cartão</h2>
-        <div id="repPag"><div class="empty">Sem dados ainda.</div></div>
-      </div>
+      <div class="card"><h2>📅 Dia que mais gastou</h2><div id="repDia"><div class="empty">Sem dados ainda.</div></div></div>
+      <div class="card"><h2>📍 Onde gastou mais (local)</h2><div id="repLocal"><div class="empty">Sem dados ainda.</div></div></div>
+      <div class="card"><h2>🏷️ Por categoria</h2><div id="repCat"><div class="empty">Sem dados ainda.</div></div></div>
+      <div class="card"><h2>💳 Dinheiro x Cartão</h2><div id="repPag"><div class="empty">Sem dados ainda.</div></div></div>
     </section>
 
-    <!-- ABA: CONFIG -->
+    <!-- CONFIG -->
     <section class="aba hidden" id="aba-config">
       <div class="card">
         <h2>⚙️ Verba & Caixa</h2>
-        <div class="field"><label>Verba total da viagem (orçamento)</label>
-          <input type="number" id="verbaInput" placeholder="0,00" step="0.01"></div>
-        <div class="field"><label>Dinheiro em espécie que está levando (caixa)</label>
-          <input type="number" id="caixaInput" placeholder="0,00" step="0.01"></div>
+        <div class="field"><label>Verba total da viagem (orçamento)</label><input type="number" id="verbaInput" placeholder="0,00" step="0.01"></div>
+        <div class="field"><label>Dinheiro em espécie que está levando (caixa)</label><input type="number" id="caixaInput" placeholder="0,00" step="0.01"></div>
         <button class="btn-primary" onclick="setConfig()">Salvar</button>
       </div>
     </section>
-
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
-
-<!-- modal -->
 <div id="modal" class="hidden">
-  <div class="modalbox">
-    <h3 id="modalTitle">Tem certeza?</h3>
-    <p id="modalText">Isso vai apagar tudo.</p>
-    <div class="acts">
-      <button class="btn-cancel" onclick="fecharModal()">Cancelar</button>
-      <button class="btn-confirm" id="modalOk">Confirmar</button>
-    </div>
-  </div>
+  <div class="modalbox"><h3 id="modalTitle">Tem certeza?</h3><p id="modalText">Isso vai apagar tudo.</p>
+    <div class="acts"><button class="btn-cancel" onclick="fecharModal()">Cancelar</button><button class="btn-confirm" id="modalOk">Confirmar</button></div></div>
 </div>
 
 <script>
-/* ============================================================
-   CREDENCIAIS DO SUPABASE
-   ============================================================ */
 const SUPABASE_URL = "https://pjuzawxjrywfupbrukqm.supabase.co";
 const SUPABASE_KEY = "sb_publishable_fO_L4xD3N99Ybm4PiL58Ug_yYtJupfp";
-/* ============================================================ */
-
-/* Login simples (ver aviso de segurança) */
 const LOGIN_USER = "Rafael Andrade";
 const LOGIN_PASS = "123456";
 
 const BRL = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v||0);
 const $ = id => document.getElementById(id);
-let sb=null, despesas=[], verba=0, caixa=0, pagamento='dinheiro', roteiro=[], diaRoteiroSel=null;
+const DIAS=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const MESES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const PER={manha:'🌅 Manhã',tarde:'☀️ Tarde',noite:'🌙 Noite'};
+let sb=null, despesas=[], verba=0, caixa=0, pagamento='dinheiro', roteiro=[], diaSel=null;
 
-function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
-$('data').value = new Date().toISOString().slice(0,10);
-$('rotData').value = new Date().toISOString().slice(0,10);
+const hoje=new Date().toISOString().slice(0,10);
+$('data').value=hoje; $('rotData').value=hoje;
 
-/* ---- login ---- */
-function fazerLogin(){
-  const u=$('loginUser').value.trim(), p=$('loginPass').value;
-  if(u===LOGIN_USER && p===LOGIN_PASS){
-    try{sessionStorage.setItem('viagem_auth','1');}catch(e){}
-    mostrarApp();
-  } else { $('loginErr').textContent='Usuário ou senha incorretos.'; }
-}
-function sair(){ try{sessionStorage.removeItem('viagem_auth');}catch(e){} location.reload(); }
-function mostrarApp(){ $('login').classList.add('hidden'); $('app').classList.remove('hidden'); initSupabase(); carregar(); }
-function checarSessao(){ let ok=false; try{ok=sessionStorage.getItem('viagem_auth')==='1';}catch(e){} if(ok) mostrarApp(); }
+/* login */
+function fazerLogin(){const u=$('loginUser').value.trim(),p=$('loginPass').value;
+  if(u===LOGIN_USER&&p===LOGIN_PASS){try{sessionStorage.setItem('viagem_auth','1');}catch(e){}mostrarApp();}
+  else{$('loginErr').textContent='Usuário ou senha incorretos.';}}
+function sair(){try{sessionStorage.removeItem('viagem_auth');}catch(e){}location.reload();}
+function mostrarApp(){$('login').classList.add('hidden');$('app').classList.remove('hidden');initSb();carregar();}
+function checarSessao(){let ok=false;try{ok=sessionStorage.getItem('viagem_auth')==='1';}catch(e){}if(ok)mostrarApp();}
 
-/* ---- menu ---- */
-function abrirMenu(){ $('drawer').classList.add('show'); $('overlay').classList.add('show'); }
-function fecharMenu(){ $('drawer').classList.remove('show'); $('overlay').classList.remove('show'); }
-const titulos={lancar:'Lançar',despesas:'Despesas',relatorios:'Relatórios',config:'Verba & Caixa'};
+/* menu */
+function abrirMenu(){$('drawer').classList.add('show');$('overlay').classList.add('show');}
+function fecharMenu(){$('drawer').classList.remove('show');$('overlay').classList.remove('show');}
+const TIT={lancar:'Lançar',despesas:'Despesas',roteiro:'Roteiro',relatorios:'Relatórios',config:'Verba & Caixa'};
 function irPara(aba){
   document.querySelectorAll('.aba').forEach(s=>s.classList.add('hidden'));
   $('aba-'+aba).classList.remove('hidden');
-  document.querySelectorAll('.navitem').forEach(b=>b.classList.toggle('active', b.dataset.aba===aba));
-  $('tituloAba').textContent=titulos[aba];
-  if(aba==='relatorios') renderRelatorios();
-  if(aba==='roteiro') renderRoteiro();
-  if(aba==='config'){ $('verbaInput').value=verba||''; $('caixaInput').value=caixa||''; }
+  document.querySelectorAll('.navitem').forEach(b=>b.classList.toggle('active',b.dataset.aba===aba));
+  $('tituloAba').textContent=TIT[aba];
+  if(aba==='relatorios')renderRelatorios();
+  if(aba==='roteiro')renderRoteiro();
+  if(aba==='config'){$('verbaInput').value=verba||'';$('caixaInput').value=caixa||'';}
   fecharMenu();
 }
+function setPay(p){pagamento=p;$('payDin').classList.toggle('on',p==='dinheiro');$('payCar').classList.toggle('on',p==='cartao');}
 
-/* ---- pagamento ---- */
-function setPay(p){ pagamento=p; $('payDin').classList.toggle('on',p==='dinheiro'); $('payCar').classList.toggle('on',p==='cartao'); }
-
-/* ---- supabase ---- */
-function initSupabase(){
-  if(SUPABASE_URL.includes('SEU-PROJETO')||SUPABASE_KEY.includes('SUA-ANON')){ $('warn').classList.add('show'); return false; }
-  sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY); return true;
+/* supabase */
+function initSb(){
+  if(SUPABASE_URL.includes('SEU-PROJETO')||SUPABASE_KEY.includes('SUA-ANON')){$('warn').classList.add('show');return false;}
+  sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);return true;
 }
 async function carregar(){
-  if(!sb){ render(); return; }
-  try{
-    const {data:cfg}=await sb.from('viagem_config').select('*').eq('id',1).maybeSingle();
-    verba=cfg?Number(cfg.verba):0; caixa=cfg?Number(cfg.caixa||0):0;
-  }catch(e){ /* config opcional */ }
-
-  try{
-    const {data,error}=await sb.from('viagem_despesas').select('*').order('data',{ascending:false}).order('id',{ascending:false});
-    if(error) throw error;
-    despesas=data||[];
-  }catch(e){ toast('Despesas: '+(e.message||e)); despesas=[]; }
-
-  try{
-    const {data:rot,error:errRot}=await sb.from('viagem_roteiro').select('*').order('data',{ascending:true}).order('id',{ascending:true});
-    if(errRot) throw errRot;
-    roteiro=rot||[];
-  }catch(e){ toast('Roteiro: '+(e.message||e)); roteiro=[]; }
-
-  render();
-  renderRoteiro();
+  if(!sb){render();renderRoteiro();return;}
+  try{const {data:cfg}=await sb.from('viagem_config').select('*').eq('id',1).maybeSingle();
+    verba=cfg?Number(cfg.verba):0;caixa=cfg?Number(cfg.caixa||0):0;}catch(e){}
+  try{const {data,error}=await sb.from('viagem_despesas').select('*').order('id',{ascending:false});
+    if(error)throw error;despesas=data||[];}catch(e){toast('Despesas: '+(e.message||e));despesas=[];}
+  try{const {data,error}=await sb.from('viagem_roteiro').select('*').order('id',{ascending:true});
+    if(error)throw error;roteiro=data||[];}catch(e){toast('Roteiro: '+(e.message||e));roteiro=[];}
+  render();renderRoteiro();
 }
 async function setConfig(){
-  const v=parseFloat($('verbaInput').value)||0, c=parseFloat($('caixaInput').value)||0;
-  verba=v; caixa=c;
-  if(sb){ const {error}=await sb.from('viagem_config').upsert({id:1,verba:v,caixa:c}); if(error){toast('Erro: '+error.message);return;} }
-  render(); toast('Salvo ✅'); irPara('lancar');
+  const v=parseFloat($('verbaInput').value)||0,c=parseFloat($('caixaInput').value)||0;verba=v;caixa=c;
+  if(sb){const {error}=await sb.from('viagem_config').upsert({id:1,verba:v,caixa:c});if(error){toast('Erro: '+error.message);return;}}
+  render();toast('Salvo ✅');irPara('lancar');
 }
 async function addDespesa(){
-  const desc=$('desc').value.trim(), cat=$('cat').value, loc=$('local').value.trim();
-  const valor=parseFloat($('valor').value), data=$('data').value;
+  const desc=$('desc').value.trim(),cat=$('cat').value,loc=$('local').value.trim(),valor=parseFloat($('valor').value),data=$('data').value;
   if(!desc){toast('Informe a descrição');return;}
   if(isNaN(valor)||valor<=0){toast('Informe um valor válido');return;}
   const reg={descricao:desc,categoria:cat,local:loc||'—',pagamento:pagamento,valor:valor,data:data};
-  if(sb){ const {data:ins,error}=await sb.from('viagem_despesas').insert(reg).select().single(); if(error){toast('Erro: '+error.message);return;} despesas.unshift(ins); }
-  else { despesas.unshift({...reg,id:Date.now()}); }
-  $('desc').value='';$('valor').value='';$('local').value='';
-  render(); toast('Despesa lançada ✅');
+  if(sb){const {data:ins,error}=await sb.from('viagem_despesas').insert(reg).select().single();if(error){toast('Erro: '+error.message);return;}despesas.unshift(ins);}
+  else{despesas.unshift({...reg,id:Date.now()});}
+  $('desc').value='';$('valor').value='';$('local').value='';render();toast('Despesa lançada ✅');
 }
 async function delDespesa(id){
-  if(sb){ const {error}=await sb.from('viagem_despesas').delete().eq('id',id); if(error){toast('Erro: '+error.message);return;} }
-  despesas=despesas.filter(d=>d.id!==id); render(); toast('Removido');
+  if(sb){const {error}=await sb.from('viagem_despesas').delete().eq('id',id);if(error){toast('Erro: '+error.message);return;}}
+  despesas=despesas.filter(d=>d.id!==id);render();toast('Removido');
 }
 
-/* ---- zerar tudo ---- */
-function pedirZerar(){
-  fecharMenu();
-  $('modalTitle').textContent='Zerar tudo?';
-  $('modalText').textContent='Isso apaga todas as despesas, o roteiro e zera a verba e o caixa. Não dá pra desfazer.';
-  $('modalOk').onclick=zerarTudo;
-  $('modal').classList.remove('hidden');
-}
-function fecharModal(){ $('modal').classList.add('hidden'); }
+/* zerar */
+function pedirZerar(){fecharMenu();$('modalTitle').textContent='Zerar tudo?';
+  $('modalText').textContent='Isso apaga despesas, roteiro e zera verba e caixa. Não dá pra desfazer.';
+  $('modalOk').onclick=zerarTudo;$('modal').classList.remove('hidden');}
+function fecharModal(){$('modal').classList.add('hidden');}
 async function zerarTudo(){
-  if(sb){
-    const {error:e1}=await sb.from('viagem_despesas').delete().neq('id',-1);
-    const {error:e2}=await sb.from('viagem_config').upsert({id:1,verba:0,caixa:0});
+  if(sb){await sb.from('viagem_despesas').delete().neq('id',-1);
     await sb.from('viagem_roteiro').delete().neq('id',-1);
-    if(e1||e2){ toast('Erro ao zerar'); return; }
-  }
-  despesas=[]; verba=0; caixa=0; roteiro=[];
-  fecharModal(); render(); irPara('lancar'); toast('Tudo zerado 🧹');
+    await sb.from('viagem_config').upsert({id:1,verba:0,caixa:0});}
+  despesas=[];verba=0;caixa=0;roteiro=[];diaSel=null;
+  fecharModal();render();renderRoteiro();irPara('lancar');toast('Tudo zerado 🧹');
 }
 
-/* ---- render ---- */
+/* render principal */
 function render(){
-  const totalGasto=despesas.reduce((s,d)=>s+Number(d.valor),0);
-  const gastoDin=despesas.filter(d=>d.pagamento==='dinheiro').reduce((s,d)=>s+Number(d.valor),0);
-  const saldoTotal=verba-totalGasto, saldoCaixa=caixa-gastoDin;
-
-  const st=$('saldoTotal'); st.textContent=BRL(saldoTotal); st.classList.toggle('neg',saldoTotal<0);
-  $('metaTotal').textContent=`Verba ${BRL(verba)} · Gasto ${BRL(totalGasto)}`;
-  $('barTotal').style.width=(verba>0?Math.min(100,totalGasto/verba*100):0)+'%';
-
-  const sc=$('saldoCaixa'); sc.textContent=BRL(saldoCaixa); sc.classList.toggle('neg',saldoCaixa<0);
-  $('metaCaixa').textContent=`Levado ${BRL(caixa)} · Em dinheiro ${BRL(gastoDin)}`;
-  $('barCaixa').style.width=(caixa>0?Math.min(100,gastoDin/caixa*100):0)+'%';
-
+  const tg=despesas.reduce((s,d)=>s+Number(d.valor),0);
+  const gd=despesas.filter(d=>d.pagamento==='dinheiro').reduce((s,d)=>s+Number(d.valor),0);
+  const sT=verba-tg,sC=caixa-gd;
+  const st=$('saldoTotal');st.textContent=BRL(sT);st.classList.toggle('neg',sT<0);
+  $('metaTotal').textContent='Verba '+BRL(verba)+' · Gasto '+BRL(tg);
+  $('barTotal').style.width=(verba>0?Math.min(100,tg/verba*100):0)+'%';
+  const sc=$('saldoCaixa');sc.textContent=BRL(sC);sc.classList.toggle('neg',sC<0);
+  $('metaCaixa').textContent='Levado '+BRL(caixa)+' · Em dinheiro '+BRL(gd);
+  $('barCaixa').style.width=(caixa>0?Math.min(100,gd/caixa*100):0)+'%';
   const ul=$('lista');
-  if(!despesas.length){ ul.innerHTML='<li class="empty">Nenhuma despesa lançada ainda.</li>'; }
-  else{
-    ul.innerHTML=despesas.map(d=>{
-      const icon=(d.categoria||'📦').split(' ')[0];
-      const dt=d.data?new Date(d.data+'T00:00').toLocaleDateString('pt-BR'):'';
-      const pg=d.pagamento==='cartao'?'<span class="pill cartao">cartão</span>':'<span class="pill dinheiro">dinheiro</span>';
-      return `<li class="item"><div class="tag">${icon}</div>
-        <div class="info"><b>${esc(d.descricao)}${pg}</b><small>${esc(d.categoria||'')} · ${esc(d.local||'—')} · ${dt}</small></div>
-        <div class="val">- ${BRL(d.valor)}</div>
-        <button class="del" onclick="delDespesa(${d.id})" title="Remover">✕</button></li>`;
+  if(!despesas.length){ul.innerHTML='<li class="empty">Nenhuma despesa lançada ainda.</li>';}
+  else{ul.innerHTML=despesas.map(d=>{
+    const ic=(d.categoria||'📦').split(' ')[0];
+    const dt=d.data?new Date(d.data+'T00:00').toLocaleDateString('pt-BR'):'';
+    const pg=d.pagamento==='cartao'?'<span class="pill cartao">cartão</span>':'<span class="pill dinheiro">dinheiro</span>';
+    return '<li class="item"><div class="tag">'+ic+'</div><div class="info"><b>'+esc(d.descricao)+pg+'</b><small>'+esc(d.categoria||'')+' · '+esc(d.local||'—')+' · '+dt+'</small></div><div class="val">- '+BRL(d.valor)+'</div><button class="del" onclick="delDespesa('+d.id+')">✕</button></li>';
+  }).join('');}
+}
+
+/* ROTEIRO */
+function diaInfo(s){const d=new Date(String(s).slice(0,10)+'T00:00');return {num:d.getDate(),wk:DIAS[d.getDay()],mes:MESES[d.getMonth()]};}
+function selDia(dt){diaSel=dt;renderRoteiro();}
+async function addRoteiro(){
+  const data=$('rotData').value,ativ=$('rotAtiv').value.trim(),per=$('rotPeriodo').value;
+  if(!data){toast('Escolha a data');return;}
+  if(!ativ){toast('Escreva a atividade');return;}
+  const reg={data:data,atividade:ativ,periodo:per||null,feito:false};
+  if(sb){const {data:ins,error}=await sb.from('viagem_roteiro').insert(reg).select().single();if(error){toast('Erro: '+error.message);return;}roteiro.push(ins);}
+  else{roteiro.push({...reg,id:Date.now()});}
+  $('rotAtiv').value='';diaSel=String(data).slice(0,10);renderRoteiro();toast('Adicionado ✅');
+}
+async function toggleR(id){
+  const r=roteiro.find(x=>x.id===id);if(!r)return;r.feito=!r.feito;
+  if(sb){const {error}=await sb.from('viagem_roteiro').update({feito:r.feito}).eq('id',id);if(error){toast('Erro: '+error.message);r.feito=!r.feito;return;}}
+  renderRoteiro();
+}
+async function delR(id){
+  if(sb){const {error}=await sb.from('viagem_roteiro').delete().eq('id',id);if(error){toast('Erro: '+error.message);return;}}
+  roteiro=roteiro.filter(r=>r.id!==id);renderRoteiro();toast('Removido');
+}
+function renderRoteiro(){
+  try{
+    const total=roteiro.length,feitos=roteiro.filter(r=>r.feito).length;
+    const prog=$('rotProg');
+    if(total>0){prog.style.display='block';const pct=Math.round(feitos/total*100);
+      $('progTxt').textContent=feitos+' de '+total+' feitos';$('progPct').textContent=pct+'%';$('progBar').style.width=pct+'%';}
+    else{prog.style.display='none';}
+
+    const tabsEl=$('rotTabs'),contEl=$('rotConteudo');
+    if(!total){tabsEl.innerHTML='';contEl.innerHTML='<div class="empty">Nenhuma atividade no roteiro ainda. Adicione acima 👆</div>';diaSel=null;return;}
+
+    const grupos={};
+    roteiro.forEach(r=>{const k=String(r.data).slice(0,10);(grupos[k]=grupos[k]||[]).push(r);});
+    const datas=Object.keys(grupos).sort();
+    if(!diaSel||!grupos[diaSel])diaSel=datas[0];
+
+    tabsEl.innerHTML=datas.map(dt=>{
+      const c=diaInfo(dt),it=grupos[dt],f=it.filter(i=>i.feito).length,full=f===it.length,on=dt===diaSel;
+      return '<button class="tab '+(on?'on':'')+' '+(full?'full':'')+'" onclick="selDia(\''+dt+'\')"><span class="tn">'+c.num+'</span><span class="tw">'+c.wk.slice(0,3)+'</span><span class="tc">'+f+'/'+it.length+'</span></button>';
     }).join('');
+
+    const c=diaInfo(diaSel),it=grupos[diaSel].slice(),f=it.filter(i=>i.feito).length;
+    const linhas=it.map(r=>{
+      const p=r.periodo?'<span class="rp">'+(PER[r.periodo]||r.periodo)+'</span>':'';
+      return '<div class="ritem '+(r.feito?'done':'')+'"><div class="rchk '+(r.feito?'on':'')+'" onclick="toggleR('+r.id+')">'+(r.feito?'✓':'')+'</div><div class="rt" onclick="toggleR('+r.id+')">'+esc(r.atividade)+'</div>'+p+'<button class="rx" onclick="delR('+r.id+')">✕</button></div>';
+    }).join('');
+    contEl.innerHTML='<div class="dhead"><span class="dn">'+c.num+'</span><span class="dw">'+c.wk+' · '+c.mes+'</span><span class="dc">'+f+'/'+it.length+'</span></div>'+linhas;
+  }catch(err){
+    const c=$('rotConteudo');if(c)c.innerHTML='<div class="empty">Erro: '+esc(err.message||err)+'</div>';
   }
 }
 
-/* ---- relatórios ---- */
-function agrupar(campo){
-  const m={};
-  despesas.forEach(d=>{ const k=(d[campo]||'—'); m[k]=(m[k]||0)+Number(d.valor); });
-  return Object.entries(m).sort((a,b)=>b[1]-a[1]);
-}
-function barras(entries,fmtLabel){
-  if(!entries.length) return '<div class="empty">Sem dados ainda.</div>';
-  const max=entries[0][1];
-  return entries.map(([k,v])=>`<div class="rep-row">
-    <div class="rl">${esc(fmtLabel?fmtLabel(k):k)}</div>
-    <div class="rbar"><i style="width:${max>0?(v/max*100):0}%"></i></div>
-    <div class="rv">${BRL(v)}</div></div>`).join('');
-}
+/* relatórios */
+function agrupar(campo){const m={};despesas.forEach(d=>{const k=(d[campo]||'—');m[k]=(m[k]||0)+Number(d.valor);});return Object.entries(m).sort((a,b)=>b[1]-a[1]);}
+function barras(e,fl){if(!e.length)return '<div class="empty">Sem dados ainda.</div>';const mx=e[0][1];
+  return e.map(([k,v])=>'<div class="rep-row"><div class="rl">'+esc(fl?fl(k):k)+'</div><div class="rbar"><i style="width:'+(mx>0?v/mx*100:0)+'%"></i></div><div class="rv">'+BRL(v)+'</div></div>').join('');}
 function renderRelatorios(){
   const total=despesas.reduce((s,d)=>s+Number(d.valor),0);
-  $('rTotal').textContent=BRL(total);
-  $('rQtd').textContent=despesas.length+' lançamento'+(despesas.length===1?'':'s');
+  $('rTotal').textContent=BRL(total);$('rQtd').textContent=despesas.length+' lançamento'+(despesas.length===1?'':'s');
   $('rMedia').textContent=BRL(despesas.length?total/despesas.length:0);
-
-  const dias=agrupar('data');
-  const nDias=dias.length;
-  $('rMediaDia').textContent = nDias? ('Média/dia '+BRL(total/nDias)) : '—';
-
-  $('repDia').innerHTML=barras(dias,k=>{ try{return new Date(k+'T00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});}catch(e){return k;} });
+  const dias=agrupar('data');$('rMediaDia').textContent=dias.length?('Média/dia '+BRL(total/dias.length)):'—';
+  $('repDia').innerHTML=barras(dias,k=>{try{return new Date(k+'T00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});}catch(e){return k;}});
   $('repLocal').innerHTML=barras(agrupar('local'));
   $('repCat').innerHTML=barras(agrupar('categoria'));
   $('repPag').innerHTML=barras(agrupar('pagamento'),k=>k==='cartao'?'💳 Cartão':'💵 Dinheiro');
 }
-
-/* ---- roteiro ---- */
-const DIAS_SEM=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-const MESES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-const PER_LBL={manha:'🌅 Manhã',tarde:'☀️ Tarde',noite:'🌙 Noite'};
-
-async function addRoteiro(){
-  const data=$('rotData').value, ativ=$('rotAtiv').value.trim(), per=$('rotPeriodo').value;
-  if(!data){toast('Escolha a data');return;}
-  if(!ativ){toast('Escreva a atividade');return;}
-  const ordem=roteiro.filter(r=>r.data===data).length;
-  const reg={data:data,atividade:ativ,periodo:per||null,feito:false,ordem:ordem};
-  if(sb){ const {data:ins,error}=await sb.from('viagem_roteiro').insert(reg).select().single(); if(error){toast('Erro: '+error.message);return;} roteiro.push(ins); }
-  else { roteiro.push({...reg,id:Date.now()}); }
-  $('rotAtiv').value='';
-  renderRoteiro(); toast('Adicionado ao roteiro ✅');
-}
-async function toggleRoteiro(id){
-  const r=roteiro.find(x=>x.id===id); if(!r) return;
-  r.feito=!r.feito;
-  if(sb){ const {error}=await sb.from('viagem_roteiro').update({feito:r.feito}).eq('id',id); if(error){toast('Erro: '+error.message);r.feito=!r.feito;return;} }
-  renderRoteiro();
-}
-async function delRoteiro(id){
-  if(sb){ const {error}=await sb.from('viagem_roteiro').delete().eq('id',id); if(error){toast('Erro: '+error.message);return;} }
-  roteiro=roteiro.filter(r=>r.id!==id); renderRoteiro(); toast('Removido');
-}
-function fmtDiaCabecalho(dateStr){
-  const d=new Date(dateStr+'T00:00');
-  return {num:d.getDate(), wk:DIAS_SEM[d.getDay()], mes:MESES[d.getMonth()]};
-}
-function selecionarDia(dt){ diaRoteiroSel = (diaRoteiroSel===dt) ? null : dt; renderRoteiro(); }
-
-function renderRoteiro(){
- try{
-  const box=$('roteiroLista');
-  if(!box) return;
-  const total=roteiro.length, feitos=roteiro.filter(r=>r.feito).length;
-  const wrap=$('rotProgressWrap');
-  if(total>0){
-    wrap.style.display='block';
-    const pct=Math.round(feitos/total*100);
-    $('rotProgressTxt').textContent=`${feitos} de ${total} feitos`;
-    $('rotProgressPct').textContent=pct+'%';
-    $('rotProgressBar').style.width=pct+'%';
-  } else { wrap.style.display='none'; }
-
-  if(!total){ box.innerHTML='<div class="empty">Nenhuma atividade no roteiro ainda. Adicione acima 👆</div>'; diaRoteiroSel=null; return; }
-
-  // agrupa por data (normaliza para YYYY-MM-DD)
-  const grupos={};
-  roteiro.forEach(r=>{ const k=String(r.data).slice(0,10); (grupos[k]=grupos[k]||[]).push(r); });
-  const datas=Object.keys(grupos).sort();
-
-  // se nada selecionado ou dia selecionado sumiu, seleciona o primeiro
-  if(!diaRoteiroSel || !grupos[diaRoteiroSel]) diaRoteiroSel = datas[0];
-
-  // chips dos dias
-  const chips = datas.map(dt=>{
-    const c=fmtDiaCabecalho(dt);
-    const itens=grupos[dt];
-    const f=itens.filter(i=>i.feito).length;
-    const completo = f===itens.length;
-    const on = dt===diaRoteiroSel;
-    return `<button class="day-chip ${on?'on':''} ${completo?'full':''}" onclick="selecionarDia('${dt}')">
-      <span class="cnum">${c.num}</span>
-      <span class="cwk">${c.wk.slice(0,3)}</span>
-      <span class="cdot">${f}/${itens.length}</span>
-    </button>`;
-  }).join('');
-
-  // atividades do dia selecionado
-  const c=fmtDiaCabecalho(diaRoteiroSel);
-  const itens=grupos[diaRoteiroSel].slice().sort((a,b)=>((a.ordem||0)-(b.ordem||0))||(a.id-b.id));
-  const f=itens.filter(i=>i.feito).length;
-  const linhas=itens.map(r=>{
-    const per=r.periodo?`<span class="rper">${PER_LBL[r.periodo]||r.periodo}</span>`:'';
-    return `<div class="rot-item ${r.feito?'done':''}">
-      <div class="rot-check ${r.feito?'on':''}" onclick="toggleRoteiro(${r.id})">${r.feito?'✓':''}</div>
-      <div class="rtxt" onclick="toggleRoteiro(${r.id})">${esc(r.atividade)}</div>
-      ${per}
-      <button class="rdel" onclick="delRoteiro(${r.id})" title="Remover">✕</button>
-    </div>`;
-  }).join('');
-
-  box.innerHTML = `
-    <div class="day-chips">${chips}</div>
-    <div class="day-group">
-      <div class="day-head"><span class="dnum">${c.num}</span><span class="dwk">${c.wk} · ${c.mes}</span><span class="dcount">${f}/${itens.length}</span></div>
-      ${linhas}
-    </div>`;
- }catch(err){
-   const box=$('roteiroLista');
-   if(box) box.innerHTML='<div class="empty">Erro ao montar o roteiro: '+esc(String(err&&err.message||err))+'</div>';
- }
-}
-
-
 
 checarSessao();
 </script>
